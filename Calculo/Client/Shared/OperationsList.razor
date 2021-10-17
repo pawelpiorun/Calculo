@@ -1,0 +1,78 @@
+﻿@inject IJSRuntime js
+@*<div>
+        <ListView Items="Operations"
+                  TItem="OperationBase">
+            <ItemTemplate>
+                <OperationComponent Operation="context"
+                                    OnRemoveButtonClicked="RemoveOperation" />
+            </ItemTemplate>
+        </ListView>
+    </div>*@
+
+@if (Operations == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Value</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    @if (EnableModify)
+                    {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var operation in Operations)
+                {
+                    <tr>
+                        <td>@operation?.Title</td>
+                        <td>@((MarkupString)operation.GetMarkupValue())</td>
+                        <td>@operation.Category?.Name</td>
+                        @if (operation.Date.HasValue)
+                        {
+                            <td>@operation.Date.Value.ToShortDateString()</td>
+                        }
+                        else
+                        {
+                            <td>???</td>
+                        }
+                        @if (EnableModify)
+                        {
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                <td>
+                                    <a class="btn btn-success" href="operation/edit/@operation.ID">Edit</a>
+                                    <button class="btn btn-danger" @onclick="(() => RemoveOperation(operation))">Delete</button>
+                                </td>
+                            </Authorized>
+                        </AuthorizeView>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code{
+    [Parameter] public List<Operation> Operations { get; set; }
+    [Parameter] public bool EnableModify { get; set; }
+    [Parameter] public EventCallback<Operation> RemoveOperationCallback { get; set; }
+
+    private async Task RemoveOperation(Operation operation)
+    {
+        var confirmed = await js.Confirm($"Are you sure you'd like to remove {operation.ID}?");
+
+        if (confirmed)
+            await RemoveOperationCallback.InvokeAsync(operation);
+    }
+}

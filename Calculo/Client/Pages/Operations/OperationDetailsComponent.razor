@@ -1,0 +1,63 @@
+﻿@page "/operation/{OperationID:int}"
+@page "/operation/{OperationID:int}/{OperationTitle}"
+@inject IOperationsRepository operationsRepo
+
+<h3>Operation details</h3>
+
+@if (operation is null)
+{
+    <div><em>Loading...</em></div>
+}
+else
+{
+    <div>
+        <text style="color: gray;">#(@operation.ID)</text>
+    </div>
+    <div>
+        <div>
+            Title: @operation.Title
+        </div>
+    </div>
+    <div>
+        <div>
+            Category: @operation.Category?.Name
+        </div>
+    </div>
+    <div>
+        <div>
+            Value: @((MarkupString)operation.GetMarkupValue())
+        </div>
+    </div>
+    <div>
+        <div>
+            Date: @operation.Date.ToString()
+        </div>
+    </div>
+    <div>
+        <div>
+            Company: @operation.BusinessEntity?.Name 
+        </div>
+        <div>
+            @operation.BusinessEntity?.Address
+        </div>
+    </div>
+    <div>
+        <div>
+            <label>Description: </label>
+            <div>
+                @operation.Description
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int OperationID { get; set; }
+    [Parameter] public string OperationTitle { get; set; }
+    private Operation operation;
+
+    protected async override Task OnInitializedAsync()
+    {
+        operation = await operationsRepo.GetEntryAsync(OperationID);
+    }
+}

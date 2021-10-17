@@ -1,0 +1,29 @@
+﻿@page "/operation/edit/{OperationID:int}"
+@inject IOperationsRepository operationsRepo
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+@if (operation is null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <OperationForm Operation="operation" OnValidSubmit="Save" SelectedCategory="operation.Category"></OperationForm>
+}
+
+@code {
+    [Parameter] public int OperationID { get; set; }
+    Operation operation;
+
+    protected async override Task OnInitializedAsync()
+    {
+        operation = await operationsRepo.GetEntryAsync(OperationID);
+    }
+
+    private async Task Save()
+    {
+        await operationsRepo.UpdateEntryAsync(operation);
+        navManager.NavigateTo("operations");
+    }
+}

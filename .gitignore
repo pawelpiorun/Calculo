@@ -1,0 +1,17 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Calculo/v16
+/Calculo/Client/obj
+/Calculo/Server/obj
+/Calculo/Server/Properties/PublishProfiles
+/Calculo/Server/wwwroot/businessentities
+/Calculo/Server/appsettings.Development - Copy.json
+/Calculo/Server/appsettings - Copy.json
+/Calculo/Server/Calculo.Server.csproj.user
+/Calculo/Shared/obj
+/Calculo/Client/Calculo.Client.csproj.user
+/Calculo/Client/bin/Debug/net5.0
+/Calculo/Server/bin/Debug/net5.0
+/Calculo/Shared/bin/Debug/net5.0

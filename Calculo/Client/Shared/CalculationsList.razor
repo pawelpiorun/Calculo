@@ -1,0 +1,25 @@
+﻿@inject IJSRuntime js
+
+<div>
+    <ListView Items="Calculations"
+              TItem="Calculation">
+        <ItemTemplate>
+            <CalculationComponent Calculation="context"
+                                  OnRemoveButtonClicked="RemoveCalculation"
+                                  @key="context.ID"/>
+        </ItemTemplate>
+    </ListView>
+</div>
+
+@code{
+    [Parameter]
+    public List<Calculation> Calculations { get; set; }
+
+    private async Task RemoveCalculation(Calculation calculation)
+    {
+        var confirmed = await js.Confirm($"Are you sure you'd like to remove {calculation.ID}?");
+
+        if (confirmed)
+            Calculations?.Remove(calculation);
+    }
+}

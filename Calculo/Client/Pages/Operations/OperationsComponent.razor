@@ -1,0 +1,39 @@
+﻿@page "/operations"
+@inject IOperationsRepository operationsRepo
+
+
+    <div class="form-group">
+        <a class="btn btn-info" href="operation/create">New operation</a>
+    </div>
+
+<label>Expenses: </label>
+<OperationsList Operations="@expenses" EnableModify="true" RemoveOperationCallback="Remove"/>
+
+<label>Incomes: </label>
+<OperationsList Operations="@incomes" EnableModify="true" RemoveOperationCallback="Remove"/>
+@*<OperationsList Operations="@operations"></OperationsList>*@
+
+    @code {
+        //private List<Operation> operations;
+        private List<Operation> expenses;
+        private List<Operation> incomes;
+
+        protected async override Task OnInitializedAsync()
+        {
+            //operations = await operationsRepo.GetEntriesAsync();
+            var dto = await operationsRepo.GetIncomesAndExpensesAsync();
+            expenses = dto.Expenses;
+            incomes = dto.Incomes;
+        }
+
+        private async Task Remove(Operation op)
+        {
+            if (op is null) return;
+
+            var id = op.ID;
+            await operationsRepo.RemoveEntryAsync(id);
+            var dto = await operationsRepo.GetIncomesAndExpensesAsync();
+            expenses = dto.Expenses;
+            incomes = dto.Incomes;
+        }
+    }

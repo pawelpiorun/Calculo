@@ -1,0 +1,31 @@
+﻿@page "/businessentity/edit/{EntityID:int}"
+@inject IBusinessEntitiesRepository businessEntitesRepo
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h3>EditBusinessEntityComponent</h3>
+
+@if (entity is null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <BusinessEntityForm Entity="entity" OnValidSubmit="Save" />
+}
+
+@code {
+    [Parameter] public int EntityID { get; set; }
+    BusinessEntity entity;
+
+    protected async override Task OnInitializedAsync()
+    {
+        entity = await businessEntitesRepo.GetEntryAsync(EntityID);
+    }
+
+    private async Task Save()
+    {
+        await businessEntitesRepo.UpdateEntryAsync(entity);
+        navManager.NavigateTo("businessentities");
+    }
+}

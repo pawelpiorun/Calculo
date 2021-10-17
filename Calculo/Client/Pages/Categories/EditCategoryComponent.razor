@@ -1,0 +1,27 @@
+﻿@page "/category/edit/{CategoryID:int}"
+@inject ICategoriesRepository categoriesRepo
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h3>Edit category</h3>
+
+@if (category != null)
+{
+    <CategoryForm Category="category" OnValidSubmit="Save" />
+}
+
+@code {
+    [Parameter] public int CategoryID { get; set; }
+    public Category category;
+
+    protected async override Task OnInitializedAsync()
+    {
+        category = await categoriesRepo.GetEntryAsync(CategoryID);
+    }
+
+    private async Task Save()
+    {
+        await categoriesRepo.UpdateEntryAsync(category);
+        navManager.NavigateTo("categories");
+    }
+}

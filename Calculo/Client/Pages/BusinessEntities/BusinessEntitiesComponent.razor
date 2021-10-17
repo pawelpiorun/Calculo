@@ -1,0 +1,51 @@
+﻿@page "/businessentities"
+@inject IBusinessEntitiesRepository entitiesRepo
+
+<h3>BusinessEntitiesComponent</h3>
+
+<div class="form-group">
+    <a class="btn btn-info" href="businessentity/create">New entity</a>
+</div>
+
+<ListView Items="Entities">
+    <Template>
+        <table class="table table-striped">
+            <thead>
+            <th></th>
+            <th>Name</th>
+            <th>Logo</th>
+            <th>Address</th>
+            </thead>
+            <tbody>
+                @foreach (var item in Entities)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="businessentity/edit/@item.ID">Edit</a>
+                            <button class="btn btn-danger">Delete</button>
+                            <a class="btn btn-info" href="businessentity/@item.ID">Details</a>
+                        </td>
+                        <td>@item.Name</td>
+                        <td><img src="@item.Logo" style="width: 100px;" /></td>
+                        <td>@item.Address</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Template>
+</ListView>
+
+@code {
+    List<BusinessEntity> Entities { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Entities = await entitiesRepo.GetEntriesAsync();
+    }
+
+    private async Task Remove(int id)
+    {
+        await entitiesRepo.RemoveEntryAsync(id);
+        Entities = await entitiesRepo.GetEntriesAsync();
+    }
+}

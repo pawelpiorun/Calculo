@@ -1,0 +1,16 @@
+﻿<div>
+    <p>
+        Title: @Calculation.ID <br />
+        Release Date: <b>@Calculation.DateTime.ToShortDateString()</b><br />
+    </p>
+    @if (ShowRemoveButton)
+    {
+        <p><input type="button" value="Remove" @onclick="(() => OnRemoveButtonClicked.InvokeAsync(Calculation))" /></p>
+    }
+</div>
+
+@code {
+    [Parameter] public bool ShowRemoveButton { get; set; } = false;
+    [Parameter] public Calculation Calculation { get; set; }
+    [Parameter] public EventCallback<Calculation> OnRemoveButtonClicked { get; set; }
+}

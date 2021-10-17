@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager navManager
+@inject IJSRuntime js
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <LoginLinks />
+        </div>
+
+        <div class="content px-4">
+                @Body
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await js.InitializeInactivityTimer(DotNetObjectReference.Create(this));
+    }
+
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    [JSInvokable]
+    public async Task Logout()
+    {
+        var authState = await AuthenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+            navManager.NavigateTo("logout");
+    }
+}

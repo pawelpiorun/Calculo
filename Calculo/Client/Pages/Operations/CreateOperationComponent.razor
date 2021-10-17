@@ -1,0 +1,23 @@
+﻿@page "/operation/create"
+@inject IRepository<Operation, int> operationsRepo
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<OperationForm Operation="operation" OnValidSubmit="Create" />
+
+@code {
+    private Operation operation = new Operation();
+    private async Task Create()
+    {
+        try
+        {
+            var id = await operationsRepo.CreateAsync(operation);
+            navManager.NavigateTo($"/operation/{id}/{operation.Title.Replace(" ", "-")}");
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x.Message);
+        }
+
+    }
+}

@@ -1,0 +1,111 @@
+﻿@inject ICategoriesRepository categoriesRepo
+
+<EditForm Model="Operation" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="name">Title: </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Operation.Title" maxlength="100" />
+            <ValidationMessage For="@(() => Operation.Title)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Value: </label>
+        <div>
+            <InputNumber TValue="double"
+                         class="form-control"
+                         @bind-Value="@Operation.Value" />
+            <ValidationMessage For="@(() => Operation.Value)" />
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label>Date: </label>
+        <div>
+            <InputDate class="form-control" @bind-Value="@Operation.Date" />
+            <ValidationMessage For="@(() => Operation.Date)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Category:</label>
+        <div>
+            <select class="form-control" @bind="SelectedCategoryNum">
+                    <option value="0">
+                        -- Select category
+                    </option>
+                    @if (Categories != null)
+                    {
+                        @foreach (var category in Categories)
+                        {
+                            <option value="@category.ID">@category.Name</option>
+                        }
+                    }
+                </select>
+            @*<CustomTypeahead @ref="categoriesTypeahead"
+                             TItem="Category"
+                             Context="category"
+                             SearchMethod="SearchCategories"
+                             ValueChanged="OnCategoryChanged">
+                <ResultTemplate>
+                    @category.Name
+                </ResultTemplate>
+            </CustomTypeahead>*@
+            <ValidationMessage For="@(() => Operation.Category)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Description: </label>
+        <div>
+            <InputTextArea class="form-control" @bind-Value="@Operation.Description" maxlength="200" />
+            <ValidationMessage For="@(() => Operation.Description)" />
+        </div>
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+</EditForm>
+
+@code {
+    [Parameter] public Operation Operation { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public Category SelectedCategory { get; set; }
+    public string SelectedCategoryNum
+    {
+        get
+        {
+            if (SelectedCategory is null)
+                return "0";
+            return SelectedCategory.ID.ToString() ?? "0";
+        }
+        set
+        {
+            var isOk = int.TryParse(value, out int index);
+            if (!isOk) return;
+
+            SelectedCategory = Categories.FirstOrDefault(x => x.ID == index);
+            Operation.Category = SelectedCategory;
+        }
+    }
+    public List<Category> Categories { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        this.Categories = await categoriesRepo.GetEntriesAsync();
+    }
+
+    //private void OnCategoryChanged(Category category)
+    //{
+    //    Operation.Category = category;
+    //    categoriesTypeahead.SearchText = category.Name;
+    //}
+    //CustomTypeahead<Category> categoriesTypeahead;
+
+    //private async Task<IEnumerable<Category>> SearchCategories(string searchText)
+    //{
+    //    return await categoriesRepo.GetCategoriesByNameAsync(searchText);
+    //}
+}

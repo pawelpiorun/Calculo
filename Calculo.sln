@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculo.Server", "Calculo\Server\Calculo.Server.csproj", "{1FED308F-5C05-4E63-AF47-27657FDDDCC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculo.Client", "Calculo\Client\Calculo.Client.csproj", "{BF6F8809-8795-4034-A8C9-A4DECA379134}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculo.Shared", "Calculo\Shared\Calculo.Shared.csproj", "{A212C1EB-13DA-42E3-8177-465B2F676B49}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Core.Shared", "..\Spark.Core\Spark.Core.Shared\Spark.Core.Shared.csproj", "{092DC5D5-DE2D-4EEF-973F-C8148F2DBFC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Core.Client", "..\Spark.Core\Spark.Core.Client\Spark.Core.Client.csproj", "{68857F60-7C1A-49A8-9DA8-2A43B7E396E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Core.Server", "..\Spark.Core\Spark.Core.Server\Spark.Core.Server.csproj", "{3C4ED24F-EFE1-43B0-B279-5BE1B12E1AD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FED308F-5C05-4E63-AF47-27657FDDDCC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FED308F-5C05-4E63-AF47-27657FDDDCC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FED308F-5C05-4E63-AF47-27657FDDDCC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FED308F-5C05-4E63-AF47-27657FDDDCC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF6F8809-8795-4034-A8C9-A4DECA379134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6F8809-8795-4034-A8C9-A4DECA379134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF6F8809-8795-4034-A8C9-A4DECA379134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6F8809-8795-4034-A8C9-A4DECA379134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A212C1EB-13DA-42E3-8177-465B2F676B49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A212C1EB-13DA-42E3-8177-465B2F676B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A212C1EB-13DA-42E3-8177-465B2F676B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A212C1EB-13DA-42E3-8177-465B2F676B49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{092DC5D5-DE2D-4EEF-973F-C8148F2DBFC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092DC5D5-DE2D-4EEF-973F-C8148F2DBFC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092DC5D5-DE2D-4EEF-973F-C8148F2DBFC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092DC5D5-DE2D-4EEF-973F-C8148F2DBFC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68857F60-7C1A-49A8-9DA8-2A43B7E396E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68857F60-7C1A-49A8-9DA8-2A43B7E396E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68857F60-7C1A-49A8-9DA8-2A43B7E396E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68857F60-7C1A-49A8-9DA8-2A43B7E396E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C4ED24F-EFE1-43B0-B279-5BE1B12E1AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C4ED24F-EFE1-43B0-B279-5BE1B12E1AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C4ED24F-EFE1-43B0-B279-5BE1B12E1AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C4ED24F-EFE1-43B0-B279-5BE1B12E1AD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07482D9C-6C9A-4851-92ED-5BC3A1C5E487}
+	EndGlobalSection
+EndGlobal

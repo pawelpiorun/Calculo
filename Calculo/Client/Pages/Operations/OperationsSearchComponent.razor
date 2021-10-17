@@ -1,0 +1,146 @@
+﻿@page "/operation/search"
+@inject IRepository<Category> categoriesRepo
+@inject IRepository<Operation> operationsRepo
+@inject NavigationManager navManager
+
+<h3>OperationsSearchComponent</h3>
+
+<EditForm Model="operationFilter">
+    <div class="form-inline">
+        <div class="form-group mb-2">
+            <label for="title" class="sr-only">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Operation Title"
+                   @bind-value="operationFilter.Title" @bind-value:event="oninput" @onkeypress="((KeyboardEventArgs e) => TitleKeyPressAsync(e))" />
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select class="form-control" @bind="operationFilter.CategoryID">
+                <option value="0">
+                    -- Select category
+                </option>
+                @if (Categories != null)
+                {
+                    @foreach (var category in Categories)
+                    {
+                        <option value="@category.ID">@category.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="expenses" @bind="operationFilter.Expense" />
+            <label class="form-check-label" for="expenses">
+                Expenses
+            </label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="incomes" @bind="operationFilter.Income" />
+            <label class="form-check-label" for="incomes">
+                Incomes
+            </label>
+        </div>
+
+        <button type="button" class="btn btn-primary mb-2 mx-sm-3" @onclick="SearchAsync">Filter</button>
+        <button type="button" class="btn btn-danger mb-2" @onclick="Clear">Clear</button>
+    </div>
+</EditForm>
+
+<Pagination CurrentPage="operationFilter.Page" TotalPages="totalPages"
+            OnPageSelected="OnPageSelected" />
+
+<OperationsList Operations="FilteredOperations" />
+<div>
+    Page: @operationFilter.Page / @totalPages
+</div>
+
+@code {
+    private List<Category> Categories;
+    private List<Operation> FilteredOperations;
+
+    //private PaginationDTO pagination = new PaginationDTO() { ItemsPerPage = 1 };
+    private int totalPages;
+
+    private OperationFilterDTO operationFilter = new OperationFilterDTO() { ItemsPerPage = 30 };
+
+    protected async override Task OnInitializedAsync()
+    {
+        var queryStrings = navManager.GetQueryStrings(navManager.Uri);
+        Categories = await categoriesRepo.GetEntriesAsync();
+        if (queryStrings != null)
+            FillFilter(queryStrings);
+
+        await RefreshOperations();
+    }
+
+    private void FillFilter(Dictionary<string, string> queryStrings)
+    {
+        if (queryStrings.ContainsKey("categoryID"))
+            operationFilter.CategoryID = int.Parse(queryStrings["categoryID"]);
+        if (queryStrings.ContainsKey("title"))
+            operationFilter.Title = queryStrings["title"];
+        if (queryStrings.ContainsKey("expense"))
+            operationFilter.Expense = bool.Parse(queryStrings["expense"]);
+        if (queryStrings.ContainsKey("income"))
+            operationFilter.Income = bool.Parse(queryStrings["income"]);
+        if (queryStrings.ContainsKey("page"))
+            operationFilter.Page = int.Parse(queryStrings["page"]);
+    }
+
+    private async Task RefreshOperations()
+    {
+        var query = GenerateQueryString();
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            query = $"?{query}";
+            navManager.NavigateTo("operation/search" + query);
+        }
+        var paginatedResponse = await operationsRepo.GetFilteredPaginatedEntriesAsync(operationFilter);
+        FilteredOperations = paginatedResponse.Response;
+
+        totalPages = paginatedResponse.TotalPages;
+    }
+
+    protected async Task OnPageSelected(int number)
+    {
+        operationFilter.Page = number;
+        await RefreshOperations();
+    }
+
+    private async Task TitleKeyPressAsync(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchAsync();
+        }
+    }
+
+    private async Task SearchAsync()
+    {
+        await RefreshOperations();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Clear()
+    {
+        operationFilter.Title = string.Empty;
+        operationFilter.CategoryID = 0;
+        operationFilter.Expense = true;
+        operationFilter.Income = true;
+        await RefreshOperations();
+    }
+
+    private string GenerateQueryString()
+    {
+        var queryStringDict = new Dictionary<string, string>();
+        queryStringDict["categoryID"] = operationFilter.CategoryID.ToString();
+        queryStringDict["title"] = operationFilter.Title ?? string.Empty;
+        queryStringDict["expense"] = operationFilter.Expense.ToString();
+        queryStringDict["income"] = operationFilter.Income.ToString();
+        queryStringDict["page"] = operationFilter.Page.ToString();
+
+        var defaultValue = new string[] { "false", "", "0" };
+
+        return string.Join("&", queryStringDict
+            .Where(x => !defaultValue.Contains(x.Value.ToLower()))
+            .Select(x => $"{x.Key}={System.Web.HttpUtility.UrlEncode(x.Value)}").ToArray());
+    }
+}

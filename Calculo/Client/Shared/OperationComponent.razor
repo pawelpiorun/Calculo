@@ -1,0 +1,19 @@
+﻿<div>
+    <p>
+        ID: @Operation.ID <br />
+        Title: @Operation.Title  <br />
+        Category: @Operation.Category.Name  <br />
+        Date: <b>@Operation.Date.Value.ToShortDateString()</b><br />
+        Value: @((MarkupString)Operation.GetMarkupValue())<br />
+    </p>
+    @if (ShowRemoveButton)
+    {
+        <p><input type="button" value="Remove" @onclick="(() => OnRemoveButtonClicked.InvokeAsync(Operation))" /></p>
+    }
+</div>
+
+@code {
+    [Parameter] public bool ShowRemoveButton { get; set; } = false;
+    [Parameter] public Operation Operation { get; set; }
+    [Parameter] public EventCallback<Operation> OnRemoveButtonClicked { get; set; }
+}

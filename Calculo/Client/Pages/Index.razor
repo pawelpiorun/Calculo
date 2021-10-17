@@ -1,0 +1,20 @@
+﻿@page "/"
+@inject IRepository<Calculation> calculationsRepo
+
+<div style="display: flex">
+    @*<div style="flex: 50%">
+        <div class="spinner-grow" />
+    </div>*@
+    <div style="flex: 50%">
+        <h3>Calculations</h3>
+        <CalculationsList Calculations="@calculations" />
+    </div>
+</div>
+
+@code{
+    List<Calculation> calculations;
+    protected async override Task OnInitializedAsync()
+    {
+        calculations = await calculationsRepo.GetEntriesAsync();
+    }
+}

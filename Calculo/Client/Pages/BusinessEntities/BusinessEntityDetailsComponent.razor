@@ -1,0 +1,71 @@
+﻿@page "/businessentity/{EntityID:int}"
+@inject IBusinessEntitiesRepository entitiesRepo 
+@inject IRatingRepository<BusinessEntity> ratingsRepo 
+@inject IDialogService dialogs
+@using Spark.Core.Shared.Entities 
+
+<h3>Business entity details</h3>
+
+
+@if (entity is null)
+{
+    <div><em>Loading...</em></div>
+}
+else
+{
+    <div>
+        <text style="color: gray;">#@entity.ID</text>
+    </div>
+    <div>
+        <div>
+            Name: @entity.Name
+            <text> | Average: </text> @ratedEntity.AverageRating.ToString("0.#") <text>/5 | @(isRated ? "Your" : "Please") vote: </text>
+            <RatingComponent MaximumRating="5" SelectedRating="@ratedEntity.Rating" OnVote="OnVote" />
+        </div>
+    </div>
+    <div>
+        <div>
+            @if (entity.Logo != null)
+            {
+                <img src="@entity.Logo" style="width: 200px;"/>
+            }
+        </div>
+    </div>
+    <div>
+        <div>
+            <label>Address: </label>
+            <div>
+                @entity.Address
+            </div>
+        </div>
+    </div>
+    <div>
+        <div>
+            <label>Rating: </label>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public int EntityID { get; set; }
+    BusinessEntity entity;
+    RatedEntityDTO<BusinessEntity> ratedEntity;
+    bool isRated = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        ratedEntity = await entitiesRepo.GetRatedEntryAsync(EntityID);
+        entity = ratedEntity?.RatedEntity;
+        isRated = ratedEntity.IsRated;
+    }
+
+    private async Task OnVote(int selectedRate)
+    {
+        ratedEntity.Rating = selectedRate;
+        var rating = new Rating<BusinessEntity>() { Rate = selectedRate, RatedEntityID = entity.ID };
+        await ratingsRepo.Vote(rating);
+        isRated = true;
+        await dialogs.ShowSuccess("Thank you for your vote!");
+    }
+}

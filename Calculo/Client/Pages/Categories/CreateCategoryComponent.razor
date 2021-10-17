@@ -1,0 +1,24 @@
+﻿@page "/category/create"
+@inject IRepository<Category, int> categoriesRepo
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h3>CreateCategoryComponent</h3>
+
+<CategoryForm Category="category" OnValidSubmit="Create" />
+
+@code {
+    private Category category = new Category();
+    private async Task Create()
+    {
+        try
+        {
+            await categoriesRepo.CreateAsync(category);
+            navManager.NavigateTo("categories");
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x.Message);
+        }
+    }
+}

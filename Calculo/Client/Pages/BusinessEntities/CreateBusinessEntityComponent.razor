@@ -1,0 +1,24 @@
+﻿@page "/businessentity/create"
+@inject IRepository<BusinessEntity, int> entitiesRepo
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h3>CreateBusinessEntityComponent</h3>
+
+<BusinessEntityForm Entity="businessEntity" OnValidSubmit="Create" />
+
+@code {
+    private BusinessEntity businessEntity = new BusinessEntity();
+    private async Task Create()
+    {
+        try
+        {
+            await entitiesRepo.CreateAsync(businessEntity);
+            navManager.NavigateTo("/businessentities");
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x.Message);
+        }
+    }
+}

@@ -1,0 +1,65 @@
+﻿@page "/categories"
+@inject IRepository<Category, int> categoriesRepo
+@inject IJSRuntime js
+
+<h3>CategoriesComponent</h3>
+
+<div class="form-group">
+    <a class="btn btn-info" href="category/create">New category</a>
+</div>
+
+<ListView Items="Categories">
+    <Template>
+        <table class="table table-striped">
+            <thead>
+            <th></th>
+            <th>Name</th>
+            </thead>
+            <tbody>
+                @foreach (var item in Categories)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="category/edit/@item.ID">Edit</a>
+                            <button class="btn btn-danger" @onclick="@(() => Remove(item.ID))">Delete</button>
+                        </td>
+                        <td>@item.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Template>
+</ListView>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState> authenticationState { get; set; }
+
+    List<Category> Categories { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            Categories = await categoriesRepo.GetEntriesAsync();
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x.Message);
+        }
+    }
+
+    private async Task Remove(int id)
+    {
+        var authState = await authenticationState;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            await categoriesRepo.RemoveEntryAsync(id);
+            Categories = await categoriesRepo.GetEntriesAsync();
+        }
+        else
+        {
+            await js.Alert("You are not authorized to do that.");
+        }
+    }
+}
